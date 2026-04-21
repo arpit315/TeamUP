@@ -5,7 +5,7 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { FiGithub, FiLinkedin, FiTwitter, FiGlobe, FiEdit2, FiX, FiLayers, FiMessageSquare, FiHeart, FiShare2, FiMoreHorizontal, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import ImageGallery from '../components/ImageGallery';
-
+import CommentSection from '../components/CommentSection';
 const Profile = () => {
     const { username } = useParams();
     const { user: currentUser } = useAuthStore();
@@ -17,23 +17,18 @@ const Profile = () => {
     const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [posts, setPosts] = useState([]);
     const [postsLoading, setPostsLoading] = useState(false);
-
     // Project States
     const [projects, setProjects] = useState([]);
     const [projectsLoading, setProjectsLoading] = useState(false);
     const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
     const [newProject, setNewProject] = useState({ title: '', description: '', githubUrl: '', liveUrl: '', images: [] });
     const [savingProject, setSavingProject] = useState(false);
-
     // Gallery States
     const [galleryData, setGalleryData] = useState(null); // { images: [], title: "" }
-
     // Avatar upload logic
     const fileInputRef = useRef(null);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-
     const isOwnProfile = currentUser?.username === username;
-
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -60,7 +55,6 @@ const Profile = () => {
         };
         fetchProfile();
     }, [username, isOwnProfile, currentUser]);
-
     useEffect(() => {
         if (activeTab === 'posts' && profileUser) {
             const fetchUserPosts = async () => {
@@ -77,7 +71,6 @@ const Profile = () => {
             fetchUserPosts();
         }
     }, [activeTab, profileUser]);
-
     useEffect(() => {
         if (profileUser) {
             const fetchUserProjects = async () => {
@@ -94,7 +87,6 @@ const Profile = () => {
             fetchUserProjects();
         }
     }, [profileUser]);
-
     const handleSaveProfile = async () => {
         try {
             const res = await api.patch('/users/update-details', {
@@ -106,7 +98,7 @@ const Profile = () => {
                 twitter: editData.twitter,
             });
             setProfileUser(res.data.data);
-            useAuthStore.getState().setUser(res.data.data); // Update global store too
+            useAuthStore.getState().setUser(res.data.data); 
             setIsEditing(false);
             toast.success("Profile updated successfully!");
         } catch (error) {
@@ -114,13 +106,11 @@ const Profile = () => {
             toast.error(error.response?.data?.message || "Failed to update profile");
         }
     };
-
     const handleLike = async (postId) => {
         if (!currentUser) {
             toast.error("Sign in to like this post");
             return;
         }
-
         try {
             setPosts(posts.map(post => {
                 if (post._id === postId) {
@@ -135,33 +125,27 @@ const Profile = () => {
                 }
                 return post;
             }));
-
             setTimeout(() => {
                 setPosts(current => current.map(p => p._id === postId ? { ...p, justLiked: false } : p));
             }, 400);
-
             await api.post(`/posts/${postId}/like`);
         } catch (error) {
             console.error(error);
             toast.error("Action failed");
         }
     };
-
     const handleToggleFollow = async () => {
         if (isFollowLoading) return;
         try {
             setIsFollowLoading(true);
             const res = await api.post(`/users/follow/${profileUser._id}`);
             const { isFollowing } = res.data.data;
-
-            // Optimistically update local state
             setProfileUser(prev => ({
                 ...prev,
                 followers: isFollowing
                     ? [...(prev.followers || []), currentUser._id]
                     : (prev.followers || []).filter(id => id !== currentUser._id)
             }));
-
             toast.success(isFollowing ? "Followed successfully" : "Unfollowed successfully");
         } catch (error) {
             console.error(error);
@@ -170,19 +154,14 @@ const Profile = () => {
             setIsFollowLoading(false);
         }
     };
-
     const handleAvatarChange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
-
         try {
             setIsUploadingAvatar(true);
             const formData = new FormData();
             formData.append('avatar', file);
-
             const res = await api.patch('/users/update-avatar', formData);
-
-            // Update local states
             setProfileUser(res.data.data);
             useAuthStore.getState().setUser(res.data.data);
             toast.success("Profile picture updated!");
@@ -192,7 +171,6 @@ const Profile = () => {
             setIsUploadingAvatar(false);
         }
     };
-
     const handleAddProject = async (e) => {
         e.preventDefault();
         setSavingProject(true);
@@ -207,9 +185,7 @@ const Profile = () => {
                     formData.append('images', img);
                 });
             }
-
             const res = await api.post('/projects', formData);
-
             setProjects([res.data.data, ...projects]);
             setIsAddProjectModalOpen(false);
             setNewProject({ title: '', description: '', githubUrl: '', liveUrl: '', images: [] });
@@ -220,7 +196,6 @@ const Profile = () => {
             setSavingProject(false);
         }
     };
-
     const handleDeleteProject = async (projectId) => {
         if (!window.confirm('Are you sure you want to delete this project?')) return;
         try {
@@ -231,7 +206,6 @@ const Profile = () => {
             toast.error("Failed to delete project");
         }
     };
-
     if (loading) {
         return (
             <div className="flex justify-center items-center min-h-[60vh]">
@@ -239,21 +213,17 @@ const Profile = () => {
             </div>
         );
     }
-
     if (!profileUser) {
         return <div className="text-center py-20 text-slate-500 text-xl font-semibold">User not found</div>;
     }
-
     return (
         <div className="max-w-4xl mx-auto py-10 px-4 sm:px-0">
             {/* Ambient Background Glows */}
             <div className="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob pointer-events-none -z-10"></div>
             <div className="fixed top-40 right-10 w-96 h-96 bg-accent/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 pointer-events-none -z-10"></div>
-
             {/* Profile Card */}
             <div className="glass-card rounded-[24px] p-8 mb-8 relative overflow-hidden group">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent"></div>
-
                 {/* Top Section */}
                 <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-8">
                     {/* Profile Picture */}
@@ -289,7 +259,6 @@ const Profile = () => {
                             </>
                         )}
                     </div>
-
                     {/* Basic Info */}
                     <div className="flex-1 text-center md:text-left">
                         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-1">{profileUser.fullName}</h1>
@@ -297,7 +266,6 @@ const Profile = () => {
                         <p className="text-slate-500 max-w-lg mx-auto md:mx-0 leading-relaxed font-medium">
                             {profileUser.bio || 'Frontend Engineer | Open Source Enthusiast | Building awesome web experiences 🚀'}
                         </p>
-
                         {isOwnProfile ? (
                             <button
                                 onClick={() => setIsEditing(true)}
@@ -319,8 +287,7 @@ const Profile = () => {
                         )}
                     </div>
                 </div>
-
-                {/* Stats */}
+                {}
                 <div className="flex justify-center md:justify-start gap-8 md:gap-12 py-6 border-y border-slate-100 mb-8">
                     <div className="text-center transition-transform hover:-translate-y-1">
                         <div className="text-2xl font-bold text-slate-800">{profileUser.followers?.length || 0}</div>
@@ -335,9 +302,8 @@ const Profile = () => {
                         <div className="text-xs font-semibold text-slate-400 uppercase tracking-wider mt-1">Projects</div>
                     </div>
                 </div>
-
                 <div className="grid md:grid-cols-2 gap-8">
-                    {/* Skills */}
+                    {}
                     <div>
                         <h3 className="text-lg font-bold text-slate-800 mb-4 tracking-tight">Tech Stack</h3>
                         <div className="flex flex-wrap gap-2.5">
@@ -350,8 +316,7 @@ const Profile = () => {
                             )}
                         </div>
                     </div>
-
-                    {/* Socials */}
+                    {}
                     <div>
                         <h3 className="text-lg font-bold text-slate-800 mb-4 tracking-tight">Connect</h3>
                         <div className="flex gap-3">
@@ -377,8 +342,7 @@ const Profile = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Tabs & Content */}
+            {}
             <div className="mb-6 flex gap-8 border-b border-slate-200">
                 {['posts', 'projects'].map(tab => (
                     <button
@@ -393,7 +357,6 @@ const Profile = () => {
                     </button>
                 ))}
             </div>
-
             {
                 activeTab === 'posts' ? (
                     <div className="space-y-6 mb-12">
@@ -413,7 +376,7 @@ const Profile = () => {
                                     key={post._id}
                                     className={`glass-card rounded-3xl p-6 sm:p-7 animate-fade-in-up stagger-${index > 3 ? 1 : index + 1}`}
                                 >
-                                    {/* Author Top Row */}
+                                    {}
                                     <div className="flex items-start justify-between mb-4">
                                         <Link to={`/profile/${post.author.username}`} className="flex items-center gap-3.5 group">
                                             <div className="relative">
@@ -433,18 +396,15 @@ const Profile = () => {
                                                 </div>
                                             </div>
                                         </Link>
-
                                         <button className="text-slate-400 hover:text-slate-700 p-2 hover:bg-slate-100 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:opacity-100">
                                             <FiMoreHorizontal className="w-5 h-5" />
                                         </button>
                                     </div>
-
-                                    {/* Body */}
+                                    {}
                                     <p className="text-[15px] leading-[1.6] text-slate-700 whitespace-pre-wrap mb-4 font-medium tracking-wide">
                                         {post.content}
                                     </p>
-
-                                    {/* Media Attachment Grid */}
+                                    {}
                                     {(post.images && post.images.length > 0) && (
                                         <div
                                             className={`mt-4 mb-4 grid gap-2 rounded-2xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:opacity-95 transition-opacity ${post.images.length === 1 ? 'grid-cols-1' :
@@ -473,8 +433,7 @@ const Profile = () => {
                                             ))}
                                         </div>
                                     )}
-
-                                    {/* Legacy single image support */}
+                                    {}
                                     {(!post.images || post.images.length === 0) && post.image && (
                                         <div
                                             className="mt-4 mb-4 rounded-2xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer"
@@ -483,8 +442,7 @@ const Profile = () => {
                                             <img src={post.image} alt="Attachment" className="w-full max-h-[500px] object-cover hover:scale-[1.02] transition-transform duration-500" />
                                         </div>
                                     )}
-
-                                    {/* Tag Chips */}
+                                    {}
                                     {post.tags && post.tags.length > 0 && (
                                         <div className="flex flex-wrap gap-2 mb-5">
                                             {post.tags.map(tag => (
@@ -494,10 +452,8 @@ const Profile = () => {
                                             ))}
                                         </div>
                                     )}
-
                                     <div className="border-t border-slate-100 my-4"></div>
-
-                                    {/* Interaction Bar */}
+                                    {}
                                     <div className="flex items-center gap-1 sm:gap-2">
                                         <button
                                             onClick={() => handleLike(post._id)}
@@ -509,17 +465,30 @@ const Profile = () => {
                                             <FiHeart className={`w-5 h-5 transition-transform duration-300 ${post.justLiked ? 'scale-[1.3] fill-current text-accent' : ''} ${currentUser && post.likes.includes(currentUser._id) ? 'fill-current' : 'group-hover:scale-110'}`} />
                                             <span>{post.likes.length > 0 ? post.likes.length : 'Like'}</span>
                                         </button>
-
-                                        <button className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all duration-300 group">
+                                        <button
+                                            onClick={() => {
+                                                setPosts(posts.map(p => p._id === post._id ? { ...p, showComments: !p.showComments } : p));
+                                            }}
+                                            className={`flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group ${post.showComments ? 'text-primary bg-primary/5' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'}`}
+                                        >
                                             <FiMessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                            <span>Comment</span>
-                                        </button>
-
-                                        <button className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-slate-800 transition-all duration-300 group">
-                                            <FiShare2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                            <span>Share</span>
+                                            <span>{post.commentCount > 0 ? post.commentCount : 'Comment'}</span>
                                         </button>
                                     </div>
+                                    {}
+                                    {post.showComments && (
+                                        <div className="px-2">
+                                            <CommentSection 
+                                                postId={post._id} 
+                                                onCommentAdded={() => {
+                                                    setPosts(posts.map(p => p._id === post._id ? { ...p, commentCount: (p.commentCount || 0) + 1 } : p));
+                                                }}
+                                                onCommentDeleted={() => {
+                                                    setPosts(posts.map(p => p._id === post._id ? { ...p, commentCount: Math.max(0, (p.commentCount || 0) - 1) } : p));
+                                                }}
+                                            />
+                                        </div>
+                                    )}
                                 </article>
                             ))
                         )}
@@ -533,7 +502,6 @@ const Profile = () => {
                                 </button>
                             </div>
                         )}
-
                         {projectsLoading ? (
                             <div className="flex justify-center py-20">
                                 <div className="w-10 h-10 border-4 border-slate-200 border-t-primary rounded-full animate-spin"></div>
@@ -576,7 +544,6 @@ const Profile = () => {
                                                 )}
                                             </div>
                                             <p className="text-slate-600 text-[14px] leading-relaxed mb-6 flex-1 line-clamp-3">{project.description}</p>
-
                                             <div className="flex gap-2.5 mt-auto">
                                                 {project.githubUrl && (
                                                     <a href={project.githubUrl.startsWith('http') ? project.githubUrl : `https://${project.githubUrl}`} target="_blank" rel="noopener noreferrer" className="flex-1 btn-outline py-2 px-0 text-xs flex items-center justify-center gap-1.5 font-semibold">
@@ -603,8 +570,6 @@ const Profile = () => {
                     </div>
                 )
             }
-
-
             {/* Edit Profile Modal */}
             {
                 isEditing && (
@@ -614,7 +579,6 @@ const Profile = () => {
                                 <h3 className="text-xl font-bold text-slate-800 tracking-tight">Edit Profile</h3>
                                 <button onClick={() => setIsEditing(false)} className="text-slate-400 hover:text-slate-700 transition-colors p-1"><FiX className="w-6 h-6" /></button>
                             </div>
-
                             <div className="space-y-5">
                                 <div>
                                     <label className="block text-sm font-semibold text-slate-600 mb-2">Full Name</label>
@@ -658,7 +622,6 @@ const Profile = () => {
                                         <input type="text" placeholder="https://twitter.com/..." value={editData.twitter} onChange={(e) => setEditData({ ...editData, twitter: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all text-xs font-medium" />
                                     </div>
                                 </div>
-
                                 <button
                                     onClick={handleSaveProfile}
                                     className="w-full btn-primary py-3.5 mt-2 text-base shadow-lg shadow-primary/30"
@@ -670,7 +633,6 @@ const Profile = () => {
                     </div>
                 )
             }
-
             {/* Add Project Modal */}
             {
                 isAddProjectModalOpen && (
@@ -680,7 +642,6 @@ const Profile = () => {
                                 <h3 className="text-xl font-bold text-slate-800 tracking-tight">Add New Project</h3>
                                 <button onClick={() => setIsAddProjectModalOpen(false)} className="text-slate-400 hover:text-slate-700 transition-colors p-1"><FiX className="w-6 h-6" /></button>
                             </div>
-
                             <form onSubmit={handleAddProject} className="space-y-4">
                                 <div>
                                     <label className="block text-sm font-semibold text-slate-600 mb-1">Project Title*</label>
@@ -739,7 +700,6 @@ const Profile = () => {
                                         </div>
                                     )}
                                 </div>
-
                                 <button type="submit" disabled={savingProject} className="w-full btn-primary py-3.5 mt-4 text-base shadow-lg shadow-primary/30 disabled:opacity-70 disabled:cursor-not-allowed">
                                     {savingProject ? 'Saving...' : 'Publish Project'}
                                 </button>
@@ -748,7 +708,7 @@ const Profile = () => {
                     </div>
                 )
             }
-            {/* Reusable Image Gallery Modal */}
+            {}
             {galleryData && (
                 <ImageGallery
                     images={galleryData.images}
@@ -759,5 +719,4 @@ const Profile = () => {
         </div >
     );
 };
-
 export default Profile;

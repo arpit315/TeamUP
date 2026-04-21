@@ -4,7 +4,6 @@ import useChatStore from '../store/chatStore';
 import api from '../api/axios';
 import { FiSend, FiUser, FiInfo } from 'react-icons/fi';
 import toast from 'react-hot-toast';
-
 const Chat = () => {
     const { user } = useAuthStore();
     const {
@@ -19,19 +18,16 @@ const Chat = () => {
         subscribeToMessages,
         unsubscribeFromMessages,
     } = useChatStore();
-
     const [messageInput, setMessageInput] = useState('');
     const [localUsers, setLocalUsers] = useState([]);
     const [isLoadingUsers, setIsLoadingUsers] = useState(true);
     const messagesEndRef = useRef(null);
-
     // Fetch all users to chat with
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 // For simplicity, we'll fetch all users except the current user
-                // In a real app, you might want to fetch only users they follow or have chatted with
-                const res = await api.get('/users/all'); // We need to create this endpoint
+                const res = await api.get('/users/all'); 
                 setLocalUsers(res.data.data.filter((u) => u._id !== user._id));
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -39,13 +35,10 @@ const Chat = () => {
                 setIsLoadingUsers(false);
             }
         };
-
         if (user) {
             fetchUsers();
         }
     }, [user]);
-
-    // Fetch messages when a user is selected
     useEffect(() => {
         const fetchMessages = async () => {
             if (!selectedUser) return;
@@ -56,43 +49,32 @@ const Chat = () => {
                 toast.error("Failed to load messages");
             }
         };
-
         fetchMessages();
-
         subscribeToMessages();
         return () => unsubscribeFromMessages();
     }, [selectedUser, subscribeToMessages, unsubscribeFromMessages, setMessages]);
-
-    // Auto-scroll to bottom of messages
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
-
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if (!messageInput.trim() || !selectedUser) return;
-
         try {
             const res = await api.post(`/messages/send/${selectedUser._id}`, {
                 content: messageInput,
             });
-
-            // Optimistically add the message to the UI
             setMessages([...messages, res.data.data]);
             setMessageInput('');
         } catch (error) {
             toast.error("Failed to send message");
         }
     };
-
     return (
         <div className="max-w-7xl mx-auto pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative">
             {/* Ambient Background Glows */}
             <div className="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob pointer-events-none -z-10"></div>
             <div className="fixed top-40 right-10 w-96 h-96 bg-accent/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 pointer-events-none -z-10"></div>
-
             <div className="glass-panel rounded-3xl overflow-hidden h-[80vh] flex shadow-2xl border border-white/40">
-
                 {/* Sidebar - User List */}
                 <div className="w-[320px] border-r border-slate-200/50 flex flex-col bg-white/40 backdrop-blur-md">
                     <div className="p-6 border-b border-slate-200/50 flex justify-between items-center">
@@ -101,7 +83,6 @@ const Chat = () => {
                             <i className="fa-solid fa-pen text-sm"></i>
                         </button>
                     </div>
-
                     <div className="flex-1 overflow-y-auto p-4 space-y-1 custom-scrollbar">
                         {isLoadingUsers ? (
                             <div className="flex justify-center py-10">
@@ -144,7 +125,6 @@ const Chat = () => {
                         )}
                     </div>
                 </div>
-
                 {/* Main Chat Area */}
                 <div className="flex-1 flex flex-col bg-white/20 backdrop-blur-sm relative">
                     {!selectedUser ? (
@@ -176,7 +156,6 @@ const Chat = () => {
                                     <i className="fa-solid fa-circle-info text-lg"></i>
                                 </button>
                             </div>
-
                             {/* Messages Container */}
                             <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-50/30">
                                 {messages.map((msg, idx) => {
@@ -197,8 +176,7 @@ const Chat = () => {
                                 })}
                                 <div ref={messagesEndRef} />
                             </div>
-
-                            {/* Message Input */}
+                            {}
                             <div className="p-4 bg-white/60 backdrop-blur-md border-t border-slate-200/50">
                                 <form onSubmit={handleSendMessage} className="flex gap-3 items-center">
                                     <button type="button" className="w-10 h-10 rounded-full text-slate-400 hover:text-primary hover:bg-white flex items-center justify-center transition-colors shrink-0 shadow-sm">
@@ -207,7 +185,6 @@ const Chat = () => {
                                     <button type="button" className="w-10 h-10 rounded-full text-slate-400 hover:text-primary hover:bg-white flex items-center justify-center transition-colors shrink-0 shadow-sm">
                                         <i className="fa-solid fa-paperclip text-lg"></i>
                                     </button>
-
                                     <div className="flex-1 relative">
                                         <input
                                             type="text"
@@ -218,7 +195,6 @@ const Chat = () => {
                                             autoComplete="off"
                                         />
                                     </div>
-
                                     <button
                                         type="submit"
                                         disabled={!messageInput.trim()}
@@ -235,5 +211,4 @@ const Chat = () => {
         </div>
     );
 };
-
 export default Chat;

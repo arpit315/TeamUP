@@ -8,29 +8,29 @@ import Register from './pages/Register';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import useAuthStore from './store/authStore';
+import useNotificationStore from './store/notificationStore';
 import { Toaster } from 'react-hot-toast';
-
-// A generic wrapper to protect routes that require login
 const ProtectedRoute = ({ children }) => {
     const { user, isLoading } = useAuthStore();
-
     if (isLoading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-
     if (!user) {
         return <Navigate to="/login" replace />;
     }
-
     return children;
 };
-
 const App = () => {
     const { user, fetchCurrentUser } = useAuthStore();
-
-    // Check if user is already logged in when the app starts
+    const { fetchNotifications, subscribeToNotifications, unsubscribeFromNotifications } = useNotificationStore();
     useEffect(() => {
         fetchCurrentUser();
     }, [fetchCurrentUser]);
-
+    useEffect(() => {
+        if (user) {
+            fetchNotifications();
+            subscribeToNotifications();
+            return () => unsubscribeFromNotifications();
+        }
+    }, [user, fetchNotifications, subscribeToNotifications, unsubscribeFromNotifications]);
     return (
         <BrowserRouter>
             <div className={`w-full min-h-screen font-sans overflow-x-hidden relative transition-colors duration-500 ${user ? 'bg-gray-50 text-gray-900' : 'dark bg-[#030712] text-white'}`}>
@@ -63,5 +63,4 @@ const App = () => {
         </BrowserRouter>
     );
 };
-
 export default App;

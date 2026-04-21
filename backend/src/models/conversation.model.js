@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-
 const conversationSchema = new Schema(
     {
         participants: [
@@ -20,5 +19,4 @@ const conversationSchema = new Schema(
         timestamps: true,
     }
 );
-
 export const Conversation = mongoose.model("Conversation", conversationSchema);

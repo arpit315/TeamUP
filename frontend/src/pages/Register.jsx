@@ -4,7 +4,6 @@ import api from '../api/axios';
 import useAuthStore from '../store/authStore';
 import toast from 'react-hot-toast';
 import { FiBriefcase } from 'react-icons/fi';
-
 const Register = () => {
     const [formData, setFormData] = useState({
         fullName: '',
@@ -15,23 +14,18 @@ const Register = () => {
     const [loading, setLoading] = useState(false);
     const { setUser } = useAuthStore();
     const navigate = useNavigate();
-
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
             await api.post('/users/register', formData);
-
             const loginResp = await api.post('/users/login', {
                 email: formData.email,
                 password: formData.password
             });
-
             setUser(loginResp.data.data.user);
             toast.success('Account created successfully! Welcome!');
             navigate('/');
@@ -41,12 +35,10 @@ const Register = () => {
             setLoading(false);
         }
     };
-
     return (
         <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-10 pt-20">
-            {/* Ambient Backgrounds */}
+            {}
             <div className="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-accent/20 rounded-full mix-blend-multiply filter blur-[120px] opacity-60 animate-pulse-slow pointer-events-none -z-10"></div>
-
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center animate-fade-in-up">
                 <Link to="/" className="inline-flex items-center justify-center p-3 bg-gradient-to-tr from-accent to-primary rounded-2xl mb-6 shadow-xl shadow-accent/20 hover:scale-105 transition-transform duration-300">
                     <FiBriefcase className="w-8 h-8 text-white" />
@@ -61,7 +53,6 @@ const Register = () => {
                     </Link>
                 </p>
             </div>
-
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up stagger-1">
                 <div className="glass-card py-8 px-8 sm:px-10 shadow-2xl rounded-[2.5rem]">
                     <form className="space-y-4" onSubmit={handleSubmit}>
@@ -77,7 +68,6 @@ const Register = () => {
                                 placeholder=""
                             />
                         </div>
-
                         <div>
                             <label className="block text-sm font-bold text-slate-200 mb-1.5 tracking-wide">Username</label>
                             <input
@@ -90,7 +80,6 @@ const Register = () => {
                                 placeholder=""
                             />
                         </div>
-
                         <div>
                             <label className="block text-sm font-bold text-slate-200 mb-1.5 tracking-wide">Email address</label>
                             <input
@@ -103,7 +92,6 @@ const Register = () => {
                                 placeholder=""
                             />
                         </div>
-
                         <div>
                             <label className="block text-sm font-bold text-slate-200 mb-1.5 tracking-wide">Password</label>
                             <input
@@ -117,7 +105,6 @@ const Register = () => {
                                 placeholder="Minimum 6 characters"
                             />
                         </div>
-
                         <div className="pt-4">
                             <button
                                 type="submit"
@@ -133,5 +120,4 @@ const Register = () => {
         </div>
     );
 };
-
 export default Register;

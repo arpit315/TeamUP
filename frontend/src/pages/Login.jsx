@@ -4,21 +4,17 @@ import api from '../api/axios';
 import useAuthStore from '../store/authStore';
 import toast from 'react-hot-toast';
 import { FiBriefcase } from 'react-icons/fi';
-
 const Login = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const { setUser } = useAuthStore();
     const navigate = useNavigate();
-
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
             const response = await api.post('/users/login', formData);
             setUser(response.data.data.user);
@@ -30,12 +26,10 @@ const Login = () => {
             setLoading(false);
         }
     };
-
     return (
         <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-10">
-            {/* Ambient Backgrounds */}
+            {}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full mix-blend-multiply filter blur-[120px] opacity-70 animate-pulse-slow pointer-events-none -z-10"></div>
-
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center animate-fade-in-up">
                 <Link to="/" className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-primary to-accent rounded-2xl mb-6 shadow-xl shadow-primary/20 hover:scale-105 transition-transform duration-300">
                     <FiBriefcase className="w-8 h-8 text-white" />
@@ -50,7 +44,6 @@ const Login = () => {
                     </Link>
                 </p>
             </div>
-
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up stagger-1">
                 <div className="glass-card py-10 px-8 shadow-2xl rounded-[2.5rem]">
                     <form className="space-y-6" onSubmit={handleSubmit}>
@@ -68,7 +61,6 @@ const Login = () => {
                                 placeholder=""
                             />
                         </div>
-
                         <div>
                             <div className="flex items-center justify-between mb-2">
                                 <label className="block text-sm font-bold text-slate-200 tracking-wide">
@@ -88,7 +80,6 @@ const Login = () => {
                                 placeholder=""
                             />
                         </div>
-
                         <div className="pt-2">
                             <button
                                 type="submit"
@@ -107,7 +98,6 @@ const Login = () => {
                         </div>
                     </form>
                 </div>
-
                 <p className="mt-8 text-center text-xs text-slate-400 font-medium px-10">
                     By continuing, you agree to DevConnect's <a href="#" className="underline hover:text-slate-400">Terms of Service</a> and <a href="#" className="underline hover:text-slate-400">Privacy Policy</a>.
                 </p>
@@ -115,5 +105,4 @@ const Login = () => {
         </div>
     );
 };
-
 export default Login;

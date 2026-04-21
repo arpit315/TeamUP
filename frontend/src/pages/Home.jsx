@@ -5,7 +5,7 @@ import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { FiHeart, FiMessageSquare, FiShare2, FiImage, FiSend, FiMoreHorizontal, FiBriefcase, FiX } from 'react-icons/fi';
 import ImageGallery from '../components/ImageGallery';
-
+import CommentSection from '../components/CommentSection';
 const Home = () => {
     const { user } = useAuthStore();
     const [posts, setPosts] = useState([]);
@@ -14,7 +14,6 @@ const Home = () => {
     const [creatingPost, setCreatingPost] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]); // Array of File objects
     const [galleryData, setGalleryData] = useState(null); // { images: [], title: "" }
-
     useEffect(() => {
         const fetchFeed = async () => {
             try {
@@ -28,11 +27,9 @@ const Home = () => {
         };
         fetchFeed();
     }, []);
-
     const handleCreatePost = async (e) => {
         e.preventDefault();
         if (!newPostContent.trim()) return;
-
         setCreatingPost(true);
         try {
             const formData = new FormData();
@@ -40,34 +37,28 @@ const Home = () => {
             if (selectedImages.length > 0) {
                 selectedImages.forEach(img => formData.append('images', img));
             }
-
             const response = await api.post('/posts', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-
             const newPost = { ...response.data.data, isNew: true };
             setPosts([newPost, ...posts]);
             setNewPostContent('');
             setSelectedImages([]);
             toast.success("Post created successfully");
-
             setTimeout(() => {
                 setPosts(current => current.map(p => p._id === newPost._id ? { ...p, isNew: false } : p));
             }, 1000);
-
         } catch (error) {
             toast.error(error.response?.data?.message || "Failed to create post");
         } finally {
             setCreatingPost(false);
         }
     };
-
     const handleLike = async (postId) => {
         if (!user) {
             toast.error("Sign in to like this post");
             return;
         }
-
         try {
             setPosts(posts.map(post => {
                 if (post._id === postId) {
@@ -82,43 +73,35 @@ const Home = () => {
                 }
                 return post;
             }));
-
             setTimeout(() => {
                 setPosts(current => current.map(p => p._id === postId ? { ...p, justLiked: false } : p));
             }, 400);
-
             await api.post(`/posts/${postId}/like`);
         } catch (error) {
             console.error(error);
             toast.error("Action failed");
         }
     };
-
     return (
         <div className="w-full relative flex flex-col items-center py-10 z-10 min-h-screen">
             <div className="w-full max-w-[680px] px-4 sm:px-0">
                 {/* Ambient Background Glows */}
                 <div className="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob pointer-events-none -z-10"></div>
                 <div className="fixed top-40 right-10 w-96 h-96 bg-accent/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 pointer-events-none -z-10"></div>
-
                 {/* Main Welcome Hero (Unauthenticated) */}
                 {!user && (
                     <div className="glass-card rounded-[2rem] p-12 mb-12 text-center overflow-hidden relative animate-fade-in-up">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-[100px] pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-accent/10 to-transparent rounded-tr-[100px] pointer-events-none"></div>
-
                         <div className="inline-flex items-center justify-center p-2 bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl mb-6 shadow-inner ring-1 ring-white">
                             <FiBriefcase className="w-8 h-8 text-primary" />
                         </div>
-
                         <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-secondary mb-4 leading-tight">
                             The Professional Network <br /> for <span className="text-gradient">Engineers</span>
                         </h1>
-
                         <p className="text-lg text-slate-500 mb-8 max-w-lg mx-auto font-medium">
                             Share your open-source work, discover incredible projects, and connect with top-tier developers worldwide.
                         </p>
-
                         <div className="flex sm:flex-row flex-col items-center justify-center gap-4">
                             <Link to="/register" className="btn-primary w-full sm:w-auto px-8 py-3.5 text-base">
                                 Join the Community
@@ -129,7 +112,6 @@ const Home = () => {
                         </div>
                     </div>
                 )}
-
                 {/* App Header (Authenticated) */}
                 {user && (
                     <div className="mb-6 animate-fade-in-up">
@@ -137,8 +119,7 @@ const Home = () => {
                         <p className="text-slate-500 font-medium">What's on your mind today?</p>
                     </div>
                 )}
-
-                {/* Create Post Interface */}
+                {}
                 {user && (
                     <div className="glass-card rounded-3xl p-6 mb-10 animate-fade-in-up stagger-1">
                         <div className="flex gap-4 items-start">
@@ -154,9 +135,8 @@ const Home = () => {
                                     className="w-full bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-transparent focus:border-primary/20 rounded-2xl p-4 text-[15px] outline-none transition-all duration-300 shadow-inner resize-none min-h-[100px]"
                                     placeholder="Share a project, thought, or snippet..."
                                 ></textarea>
-
                                 <div className="mt-4">
-                                    {/* Image Previews */}
+                                    {}
                                     {selectedImages.length > 0 && (
                                         <div className="mb-4 grid grid-cols-4 gap-2">
                                             {selectedImages.map((img, idx) => (
@@ -173,7 +153,6 @@ const Home = () => {
                                             ))}
                                         </div>
                                     )}
-
                                     <div className="flex justify-between items-center px-1">
                                         <div className="flex items-center gap-1">
                                             <input
@@ -199,7 +178,6 @@ const Home = () => {
                                                 {selectedImages.length > 0 && <span className="text-xs bg-primary text-white w-5 h-5 rounded-full flex items-center justify-center font-bold">{selectedImages.length}</span>}
                                             </label>
                                         </div>
-
                                         <button
                                             type="submit"
                                             disabled={creatingPost || !newPostContent.trim()}
@@ -220,8 +198,7 @@ const Home = () => {
                         </div>
                     </div>
                 )}
-
-                {/* Modern Feed Stream */}
+                {}
                 {user && (
                     <div className="space-y-6">
                         {loading ? (
@@ -243,7 +220,7 @@ const Home = () => {
                                     key={post._id}
                                     className={` glass-card rounded-3xl p-6 sm:p-7 ${post.isNew ? 'animate-fade-in-up border-primary/20 shadow-neon' : `animate-fade-in-up stagger-${index > 3 ? 1 : index + 1}`}`}
                                 >
-                                    {/* Author Top Row */}
+                                    {}
                                     <div className="flex items-start justify-between mb-4">
                                         <Link to={`/profile/${post.author.username}`} className="flex items-center gap-3.5 group">
                                             <div className="relative">
@@ -263,18 +240,15 @@ const Home = () => {
                                                 </div>
                                             </div>
                                         </Link>
-
                                         <button className="text-slate-400 hover:text-slate-800 p-2 hover:bg-slate-100 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:opacity-100">
                                             <FiMoreHorizontal className="w-5 h-5" />
                                         </button>
                                     </div>
-
-                                    {/* Body */}
+                                    {}
                                     <p className="text-[15px] leading-[1.6] text-slate-700 whitespace-pre-wrap mb-4 font-medium tracking-wide">
                                         {post.content}
                                     </p>
-
-                                    {/* Media Attachment Grid */}
+                                    {}
                                     {(post.images && post.images.length > 0) && (
                                         <div
                                             className={`mt-4 mb-4 grid gap-2 rounded-2xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer hover:opacity-95 transition-opacity ${post.images.length === 1 ? 'grid-cols-1' :
@@ -303,8 +277,7 @@ const Home = () => {
                                             ))}
                                         </div>
                                     )}
-
-                                    {/* Legacy single image support */}
+                                    {}
                                     {(!post.images || post.images.length === 0) && post.image && (
                                         <div
                                             className="mt-4 mb-4 rounded-2xl overflow-hidden shadow-sm border border-slate-100 cursor-pointer"
@@ -313,8 +286,7 @@ const Home = () => {
                                             <img src={post.image} alt="Attachment" className="w-full max-h-[500px] object-cover hover:scale-[1.02] transition-transform duration-500" />
                                         </div>
                                     )}
-
-                                    {/* Tag Chips */}
+                                    {}
                                     {post.tags && post.tags.length > 0 && (
                                         <div className="flex flex-wrap gap-2 mb-5">
                                             {post.tags.map(tag => (
@@ -324,10 +296,8 @@ const Home = () => {
                                             ))}
                                         </div>
                                     )}
-
                                     <div className="border-t border-slate-100 my-4"></div>
-
-                                    {/* Interaction Bar */}
+                                    {}
                                     <div className="flex items-center gap-1 sm:gap-2">
                                         <button
                                             onClick={() => handleLike(post._id)}
@@ -339,24 +309,35 @@ const Home = () => {
                                             <FiHeart className={`w-5 h-5 transition-transform duration-300 ${post.justLiked ? 'scale-[1.3] fill-current text-accent' : ''} ${user && post.likes.includes(user._id) ? 'fill-current' : 'group-hover:scale-110'}`} />
                                             <span>{post.likes.length > 0 ? post.likes.length : 'Like'}</span>
                                         </button>
-
-                                        <button className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-secondary transition-all duration-300 group">
+                                        <button 
+                                            onClick={() => setPosts(posts.map(p => p._id === post._id ? { ...p, showComments: !p.showComments } : p))}
+                                            className={`flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group ${post.showComments ? 'text-primary bg-primary/5' : 'text-slate-500 hover:bg-slate-50 hover:text-secondary'}`}
+                                        >
                                             <FiMessageSquare className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                            <span>Comment</span>
-                                        </button>
-
-                                        <button className="flex-1 flex justify-center items-center gap-2 py-2.5 rounded-xl text-sm font-semibold text-slate-500 hover:bg-slate-50 hover:text-secondary transition-all duration-300 group">
-                                            <FiShare2 className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                                            <span>Share</span>
+                                            <span>{post.commentCount > 0 ? post.commentCount : 'Comment'}</span>
                                         </button>
                                     </div>
+                                    {}
+                                    {post.showComments && (
+                                        <div className="px-2">
+                                            <CommentSection 
+                                                postId={post._id} 
+                                                authorId={post.author._id} 
+                                                onCommentAdded={() => {
+                                                    setPosts(posts.map(p => p._id === post._id ? { ...p, commentCount: (p.commentCount || 0) + 1 } : p));
+                                                }}
+                                                onCommentDeleted={() => {
+                                                    setPosts(posts.map(p => p._id === post._id ? { ...p, commentCount: Math.max(0, (p.commentCount || 0) - 1) } : p));
+                                                }}
+                                            />
+                                        </div>
+                                    )}
                                 </article>
                             ))
                         )}
                     </div>
                 )}
-
-                {/* Reusable Image Gallery Modal */}
+                {}
                 {galleryData && (
                     <ImageGallery
                         images={galleryData.images}
@@ -368,5 +349,4 @@ const Home = () => {
         </div>
     );
 };
-
 export default Home;

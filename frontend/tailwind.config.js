@@ -1,27 +1,27 @@
-/** @type {import('tailwindcss').Config} */
+
 export default {
     content: [
         "./index.html",
         "./src/**/*.{js,ts,jsx,tsx}",
     ],
-    darkMode: 'class', // Enable dark mode if we add a toggle later
+    darkMode: 'class', 
     theme: {
         extend: {
             colors: {
                 primary: {
-                    DEFAULT: "#4F46E5", // Elegant Indigo
+                    DEFAULT: "#4F46E5", 
                     hover: "#4338CA",
                     light: "#818CF8",
                 },
-                secondary: "#0F172A", // Deep Slate / Almost Black
+                secondary: "#0F172A", 
                 accent: {
-                    DEFAULT: "#EC4899", // Vibrant Pink accent
+                    DEFAULT: "#EC4899", 
                     hover: "#DB2777",
                 },
                 surface: "#FFFFFF",
             },
             fontFamily: {
-                sans: ['Inter', 'system-ui', 'sans-serif'], // Apple/Linear style typography
+                sans: ['Inter', 'system-ui', 'sans-serif'], 
             },
             boxShadow: {
                 'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',

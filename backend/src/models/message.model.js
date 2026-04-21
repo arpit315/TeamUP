@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-
 const messageSchema = new Schema(
     {
         sender: {
@@ -17,11 +16,9 @@ const messageSchema = new Schema(
             required: true,
             trim: true,
         },
-        // We could add 'isRead', 'attachments', etc. later if needed.
     },
     {
-        timestamps: true, // Automatically manages createdAt and updatedAt
+        timestamps: true, 
     }
 );
-
 export const Message = mongoose.model("Message", messageSchema);

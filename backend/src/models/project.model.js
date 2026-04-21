@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-
 const projectSchema = new Schema(
     {
         title: {
@@ -13,7 +12,7 @@ const projectSchema = new Schema(
             trim: true,
         },
         images: {
-            type: [String], // Array of Cloudinary URLs
+            type: [String], 
             default: [],
         },
         githubUrl: {
@@ -34,5 +33,4 @@ const projectSchema = new Schema(
         timestamps: true,
     }
 );
-
 export const Project = mongoose.model("Project", projectSchema);
