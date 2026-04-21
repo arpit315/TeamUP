@@ -8,6 +8,7 @@ const Navbar = () => {
     const { user, logout } = useAuthStore();
     const { unreadCount } = useNotificationStore();
     const [isNotificationOpen, setIsNotificationOpen] = React.useState(false);
+    const [searchQuery, setSearchQuery] = React.useState('');
     const navigate = useNavigate();
     const handleLogout = async () => {
         await logout();
@@ -37,6 +38,13 @@ const Navbar = () => {
                         <input
                             type="text"
                             placeholder="Search developers, projects, or tags..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && searchQuery.trim()) {
+                                    navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+                                }
+                            }}
                             className="w-full bg-slate-100/50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-transparent dark:border-white/10 focus:bg-white dark:focus:bg-white/10 focus:border-primary/30 dark:focus:border-primary/50 rounded-full py-2.5 pl-10 pr-4 text-sm text-slate-700 dark:text-white outline-none transition-all duration-300 placeholder-slate-400 shadow-inner group-focus-within:shadow-md"
                         />
                     </div>

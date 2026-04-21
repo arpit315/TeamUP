@@ -50,4 +50,23 @@ const deleteProject = asyncHandler(async (req, res) => {
     await Project.findByIdAndDelete(projectId);
     return res.status(200).json(new ApiResponse(200, {}, "Project deleted successfully"));
 });
-export { createProject, getUserProjects, deleteProject };
+
+const searchProjects = asyncHandler(async (req, res) => {
+    const { q } = req.query;
+    if (!q?.trim()) {
+        return res.status(200).json(new ApiResponse(200, [], "Search query is missing"));
+    }
+
+    const searchRegex = new RegExp(q, "i");
+
+    const projects = await Project.find({
+        $or: [
+            { title: searchRegex },
+            { description: searchRegex }
+        ]
+    }).sort({ createdAt: -1 }).populate("author", "fullName username avatar");
+
+    return res.status(200).json(new ApiResponse(200, projects, "Projects fetched successfully"));
+});
+
+export { createProject, getUserProjects, deleteProject, searchProjects };

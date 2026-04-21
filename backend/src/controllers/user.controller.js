@@ -212,6 +212,39 @@ const toggleFollowUser = asyncHandler(async (req, res) => {
         return res.status(200).json(new ApiResponse(200, { isFollowing: true }, "Followed successfully"));
     }
 });
+
+const searchUsers = asyncHandler(async (req, res) => {
+    const { q } = req.query;
+    if (!q?.trim()) {
+        return res.status(200).json(new ApiResponse(200, [], "Search query is missing"));
+    }
+
+    const searchRegex = new RegExp(q, "i");
+    const loggedInUserId = req.user?._id;
+
+    const queryConditions = {
+        $and: [
+            { username: { $not: /test/i } },
+            { email: { $not: /test/i } },
+            {
+                $or: [
+                    { fullName: searchRegex },
+                    { username: searchRegex },
+                    { techStack: searchRegex }
+                ]
+            }
+        ]
+    };
+
+    if (loggedInUserId) {
+        queryConditions.$and.push({ _id: { $ne: loggedInUserId } });
+    }
+
+    const users = await User.find(queryConditions).select("-password -refreshToken -email");
+
+    return res.status(200).json(new ApiResponse(200, users, "Users fetched successfully"));
+});
+
 export {
     registerUser,
     loginUser,
@@ -223,4 +256,5 @@ export {
     updateUserAvatar,
     getAllUsers,
     toggleFollowUser,
+    searchUsers,
 };

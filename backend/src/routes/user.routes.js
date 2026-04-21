@@ -10,6 +10,7 @@ import {
     updateUserAvatar,
     getAllUsers,
     toggleFollowUser,
+    searchUsers,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -19,6 +20,7 @@ router.route("/login").post(loginUser);
 router.route("/refresh-token").post(refreshAccessToken);
 router.route("/profile/:username").get(getUserProfile);
 router.route("/all").get(verifyJWT, getAllUsers);
+router.route("/search").get(verifyJWT, searchUsers);
 router.route("/logout").post(verifyJWT, logoutUser);
 router.route("/me").get(verifyJWT, getCurrentUser);
 router.route("/update-details").patch(verifyJWT, updateAccountDetails);

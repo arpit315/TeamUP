@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
+import Search from './pages/Search';
 import useAuthStore from './store/authStore';
 import useNotificationStore from './store/notificationStore';
 import { Toaster } from 'react-hot-toast';
@@ -53,6 +54,14 @@ const App = () => {
                             element={
                                 <ProtectedRoute>
                                     <Profile />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/search"
+                            element={
+                                <ProtectedRoute>
+                                    <Search />
                                 </ProtectedRoute>
                             }
                         />
