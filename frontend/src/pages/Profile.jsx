@@ -17,15 +17,12 @@ const Profile = () => {
     const [isFollowLoading, setIsFollowLoading] = useState(false);
     const [posts, setPosts] = useState([]);
     const [postsLoading, setPostsLoading] = useState(false);
-    // Project States
     const [projects, setProjects] = useState([]);
     const [projectsLoading, setProjectsLoading] = useState(false);
     const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
     const [newProject, setNewProject] = useState({ title: '', description: '', githubUrl: '', liveUrl: '', images: [] });
     const [savingProject, setSavingProject] = useState(false);
-    // Gallery States
-    const [galleryData, setGalleryData] = useState(null); // { images: [], title: "" }
-    // Avatar upload logic
+    const [galleryData, setGalleryData] = useState(null); 
     const fileInputRef = useRef(null);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
     const isOwnProfile = currentUser?.username === username;
@@ -218,15 +215,11 @@ const Profile = () => {
     }
     return (
         <div className="max-w-4xl mx-auto py-10 px-4 sm:px-0">
-            {/* Ambient Background Glows */}
             <div className="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob pointer-events-none -z-10"></div>
             <div className="fixed top-40 right-10 w-96 h-96 bg-accent/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 pointer-events-none -z-10"></div>
-            {/* Profile Card */}
             <div className="glass-card rounded-[24px] p-8 mb-8 relative overflow-hidden group">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-accent"></div>
-                {/* Top Section */}
                 <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-8">
-                    {/* Profile Picture */}
                     <div className="relative w-[120px] h-[120px] shrink-0 group">
                         <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-primary to-secondary blur-md opacity-60 animate-[spin_5s_linear_infinite]"></div>
                         <img
@@ -259,7 +252,6 @@ const Profile = () => {
                             </>
                         )}
                     </div>
-                    {/* Basic Info */}
                     <div className="flex-1 text-center md:text-left">
                         <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight mb-1">{profileUser.fullName}</h1>
                         <p className="text-primary font-semibold text-lg mb-3">@{profileUser.username}</p>
@@ -570,7 +562,6 @@ const Profile = () => {
                     </div>
                 )
             }
-            {/* Edit Profile Modal */}
             {
                 isEditing && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
@@ -633,7 +624,6 @@ const Profile = () => {
                     </div>
                 )
             }
-            {/* Add Project Modal */}
             {
                 isAddProjectModalOpen && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">

@@ -1,95 +1,105 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 const Landing = () => {
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', 'dark');
-        const typingString = "Welcome to DevConnect 🚀";
-        const typeTarget = document.getElementById('typing-text');
-        let typingTimeout;
-        if (typeTarget) {
-            typeTarget.textContent = '';
-            let typeIndex = 0;
-            const typeWriter = () => {
-                if (typeIndex < typingString.length) {
-                    typeIndex++;
-                    typeTarget.textContent = typingString.substring(0, typeIndex);
-                    typingTimeout = setTimeout(typeWriter, 60);
-                }
-            };
-            typingTimeout = setTimeout(typeWriter, 500);
-        }
         return () => {
             document.documentElement.removeAttribute('data-theme');
-            if (typingTimeout) clearTimeout(typingTimeout);
         }
     }, []);
+
     return (
-        <div className="landing-page-container w-full relative overflow-hidden bg-[#030712] text-white min-h-screen">
-            {}
+        <div className="landing-page-container min-h-screen bg-[#0A0A0A] text-[#EDEDED] font-sans selection:bg-blue-500/30 relative overflow-hidden">
             <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
                 .landing-page-container {
-                     font-family: 'Poppins', sans-serif;
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
                 }
-                .bg-blob {
-                    position: absolute; filter: blur(90px); border-radius: 50%; width: 45vw; height: 45vw;
-                    animation: floatBlob 25s infinite alternate ease-in-out; opacity: 0.15; z-index: 0; pointer-events: none;
+                .bg-glow {
+                    position: absolute;
+                    top: -20%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 70vw;
+                    height: 50vw;
+                    background: radial-gradient(ellipse at top, rgba(37, 99, 235, 0.05) 0%, rgba(10, 10, 10, 0) 70%);
+                    pointer-events: none;
+                    z-index: 0;
                 }
-                .blob-1 { background: #4f46e5; top: -15%; left: -10%; }
-                .blob-2 { background: #ec4899; bottom: -20%; right: -15%; animation-delay: -5s; animation-direction: alternate-reverse;}
-                @keyframes floatBlob { 100% { transform: translate(15%, 15%) scale(1.1) rotate(20deg); } }
-                .glass-hero {
-                    background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px);
-                    border-top: 1px solid rgba(255, 255, 255, 0.05); border-bottom: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+                .btn-primary {
+                    background-color: #EDEDED;
+                    color: #0A0A0A;
+                    transition: background-color 0.2s ease, transform 0.1s ease;
                 }
-                .gradient-text {
-                    background: linear-gradient(to right, #4f46e5, #ec4899, #0ea5e9, #4f46e5);
-                    -webkit-background-clip: text; color: transparent; background-size: 300% auto;
-                    animation: textShine 6s linear infinite; display: inline-block;
+                .btn-primary:hover {
+                    background-color: #FFFFFF;
                 }
-                @keyframes textShine { to { background-position: 300% center; } }
-                .typing-cursor { display: inline-block; width: 3px; height: 1em; background-color: #4f46e5; animation: blink 0.8s infinite step-end; vertical-align: bottom; margin-left: 2px;}
-                @keyframes blink { 50% { opacity: 0; } }
-                .btn-glow {
-                    background: linear-gradient(135deg, #4f46e5, #ec4899); color: #fff;
-                    border: none; box-shadow: 0 5px 15px rgba(236, 72, 153, 0.3); transition: all 0.3s;
+                .btn-primary:active {
+                    transform: scale(0.98);
                 }
-                .btn-glow:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5); }
-                .icon-float { position: absolute; font-size: 3rem; filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); z-index: 1; opacity: 0.9;}
-                .if-1 { top: 20%; left: 8%; animation: iconDrift 8s ease-in-out infinite; font-size: 3.5rem; }
-                .if-2 { top: 65%; left: 12%; animation: iconDrift 9s ease-in-out infinite 1s; font-size: 4.5rem; filter: drop-shadow(0 0 30px rgba(236, 72, 153, 0.4));}
-                .if-3 { top: 25%; right: 10%; animation: iconDrift 7s ease-in-out infinite 2s; font-size: 3.2rem; }
-                .if-4 { top: 70%; right: 15%; animation: iconDrift 10s ease-in-out infinite 1.5s; font-size: 5rem; filter: drop-shadow(0 0 30px rgba(79, 70, 229, 0.4));}
-                @keyframes iconDrift { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-30px) rotate(15deg); } }
+                .btn-secondary {
+                    background-color: transparent;
+                    color: #A3A3A3;
+                    border: 1px solid #262626;
+                    transition: all 0.2s ease, transform 0.1s ease;
+                }
+                .btn-secondary:hover {
+                    background-color: #171717;
+                    color: #EDEDED;
+                    border-color: #404040;
+                }
+                .btn-secondary:active {
+                    transform: scale(0.98);
+                }
             `}</style>
-            <div className="bg-blob blob-1"></div>
-            <div className="bg-blob blob-2"></div>
-            {}
-            <section className="flex flex-col justify-center items-center min-h-[85vh] pt-10 relative z-10 w-full">
-                <div className="glass-hero w-full py-20 px-6 md:px-16 text-center transform transition-transform duration-300">
-                    <div className="inline-block px-5 py-2 rounded-full text-sm font-semibold uppercase tracking-widest mb-8 text-white bg-gradient-to-r from-indigo-500/20 to-pink-500/20 border border-white/10 shadow-lg">
-                        <span className="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2 shadow-[0_0_10px_#10b981] animate-pulse"></span>
-                        Live Developer Network
+            
+            <div className="bg-glow"></div>
+
+            
+            <nav className="relative z-10 flex items-center justify-between px-6 py-5 md:px-12 border-b border-white/5">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border border-white/10 shadow-sm">
+                        <span className="text-white font-semibold text-sm">D</span>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-medium text-indigo-500 mb-4 min-h-[36px]">
-                        <span id="typing-text"></span><span className="typing-cursor"></span>
-                    </h2>
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-6">
-                        The Professional Network for <br /><span className="gradient-text">Engineers</span>
-                    </h1>
-                    <p className="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10">
-                        Connect with elite developers, collaborate on open-source projects, and accelerate your career building world-class software.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                        <Link to="/register" className="btn-glow px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2">
-                            Get Started Free <i className="fa-solid fa-arrow-right"></i>
-                        </Link>
-                        <Link to="/login" className="bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2">
-                            Sign In <i className="fa-brands fa-github"></i>
-                        </Link>
-                    </div>
+                    <span className="text-lg font-medium text-white tracking-tight">DevConnect</span>
                 </div>
-            </section>
+                <div className="flex items-center gap-6">
+                    <Link to="/login" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                        Login
+                    </Link>
+                    <Link to="/register" className="text-sm font-medium btn-primary px-4 py-2 rounded-md">
+                        Get Started
+                    </Link>
+                </div>
+            </nav>
+
+            
+            <main className="relative z-10 flex flex-col items-center justify-center px-6 pt-32 pb-24 text-center mt-10">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-8">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 opacity-80"></span>
+                    <span className="text-xs font-medium text-gray-300 uppercase tracking-widest">Live Developer Network</span>
+                </div>
+                
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-semibold tracking-tight text-white mb-6 max-w-4xl leading-[1.1] md:leading-[1.1]">
+                    The Professional Network <br className="hidden md:block" /> for Engineers
+                </h1>
+                
+                <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl font-normal leading-relaxed">
+                    Connect with elite developers, collaborate on projects, and accelerate your career in a focused environment.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                    <Link to="/register" className="btn-primary px-7 py-3 rounded-lg font-medium text-sm md:text-base w-full sm:w-auto flex items-center justify-center shadow-lg shadow-white/5">
+                        Start Building
+                    </Link>
+                    <Link to="/login" className="btn-secondary px-7 py-3 rounded-lg font-medium text-sm md:text-base w-full sm:w-auto flex items-center justify-center">
+                        Explore Network
+                    </Link>
+                </div>
+            </main>
         </div>
     );
 };
+
 export default Landing;

@@ -12,8 +12,8 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [newPostContent, setNewPostContent] = useState('');
     const [creatingPost, setCreatingPost] = useState(false);
-    const [selectedImages, setSelectedImages] = useState([]); // Array of File objects
-    const [galleryData, setGalleryData] = useState(null); // { images: [], title: "" }
+    const [selectedImages, setSelectedImages] = useState([]); 
+    const [galleryData, setGalleryData] = useState(null); 
     useEffect(() => {
         const fetchFeed = async () => {
             try {
@@ -85,10 +85,8 @@ const Home = () => {
     return (
         <div className="w-full relative flex flex-col items-center py-10 z-10 min-h-screen">
             <div className="w-full max-w-[680px] px-4 sm:px-0">
-                {/* Ambient Background Glows */}
                 <div className="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob pointer-events-none -z-10"></div>
                 <div className="fixed top-40 right-10 w-96 h-96 bg-accent/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 pointer-events-none -z-10"></div>
-                {/* Main Welcome Hero (Unauthenticated) */}
                 {!user && (
                     <div className="glass-card rounded-[2rem] p-12 mb-12 text-center overflow-hidden relative animate-fade-in-up">
                         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary/10 to-transparent rounded-bl-[100px] pointer-events-none"></div>
@@ -112,7 +110,6 @@ const Home = () => {
                         </div>
                     </div>
                 )}
-                {/* App Header (Authenticated) */}
                 {user && (
                     <div className="mb-6 animate-fade-in-up">
                         <h2 className="text-2xl font-bold tracking-tight text-secondary">Home</h2>

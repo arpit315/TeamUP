@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import useAuthStore from '../store/authStore';
 import toast from 'react-hot-toast';
-import { FiBriefcase } from 'react-icons/fi';
+
 const Login = () => {
     const [formData, setFormData] = useState({ username: '', password: '' });
     const [loading, setLoading] = useState(false);
     const { setUser } = useAuthStore();
     const navigate = useNavigate();
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        return () => document.documentElement.removeAttribute('data-theme');
+    }, []);
+
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -26,81 +31,81 @@ const Login = () => {
             setLoading(false);
         }
     };
+
     return (
-        <div className="min-h-[85vh] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-10">
-            {}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full mix-blend-multiply filter blur-[120px] opacity-70 animate-pulse-slow pointer-events-none -z-10"></div>
-            <div className="sm:mx-auto sm:w-full sm:max-w-md text-center animate-fade-in-up">
-                <Link to="/" className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-primary to-accent rounded-2xl mb-6 shadow-xl shadow-primary/20 hover:scale-105 transition-transform duration-300">
-                    <FiBriefcase className="w-8 h-8 text-white" />
+        <div className="min-h-screen bg-[#0A0A0A] text-[#EDEDED] font-sans selection:bg-blue-500/30 flex flex-col relative overflow-hidden">
+            <style>{`
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+                .auth-container { font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+                .bg-glow {
+                    position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 70vw; height: 50vw;
+                    background: radial-gradient(ellipse at top, rgba(37, 99, 235, 0.05) 0%, rgba(10, 10, 10, 0) 70%); pointer-events: none; z-index: 0;
+                }
+                .minimal-input {
+                    background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); color: #EDEDED; transition: all 0.2s ease;
+                    border-radius: 0.5rem; padding: 0.75rem 1rem; width: 100%; font-size: 0.875rem;
+                }
+                .minimal-input:focus {
+                    background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.2); outline: none;
+                }
+                .btn-primary {
+                    background-color: #EDEDED; color: #0A0A0A; transition: background-color 0.2s ease, transform 0.1s ease;
+                    border-radius: 0.5rem; padding: 0.75rem 1.5rem; font-weight: 500; font-size: 0.875rem; width: 100%;
+                }
+                .btn-primary:hover { background-color: #FFFFFF; }
+                .btn-primary:active { transform: scale(0.98); }
+            `}</style>
+            
+            <div className="bg-glow"></div>
+
+            <nav className="relative z-10 px-6 py-5 md:px-12 w-full flex items-center justify-between">
+                <Link to="/" className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded bg-gradient-to-br from-gray-800 to-black flex items-center justify-center border border-white/10 shadow-sm">
+                        <span className="text-white font-semibold text-sm">D</span>
+                    </div>
+                    <span className="text-lg font-medium text-white tracking-tight">DevConnect</span>
                 </Link>
-                <h2 className="text-3xl font-extrabold text-white tracking-tight">
-                    Welcome back
-                </h2>
-                <p className="mt-3 text-slate-400 font-medium tracking-wide">
-                    New to DevConnect?{' '}
-                    <Link to="/register" className="font-bold text-primary hover:text-primary-hover transition-colors">
-                        Create an account
-                    </Link>
-                </p>
-            </div>
-            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md animate-fade-in-up stagger-1">
-                <div className="glass-card py-10 px-8 shadow-2xl rounded-[2.5rem]">
-                    <form className="space-y-6" onSubmit={handleSubmit}>
+                <Link to="/register" className="text-sm font-medium text-gray-400 hover:text-white transition-colors">
+                    Don't have an account? Sign up
+                </Link>
+            </nav>
+
+            <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 relative z-10 w-full max-w-md mx-auto auth-container pb-20">
+                <div className="text-center mb-8">
+                    <h2 className="text-3xl font-semibold tracking-tight text-white mb-2">Welcome back</h2>
+                    <p className="text-sm text-gray-400">Enter your details to sign in to your account</p>
+                </div>
+
+                <div className="w-full bg-[#0A0A0A] border border-white/10 p-8 rounded-2xl shadow-2xl">
+                    <form className="space-y-5" onSubmit={handleSubmit}>
                         <div>
-                            <label className="block text-sm font-bold text-slate-200 mb-2 tracking-wide">
-                                Username or Email
-                            </label>
+                            <label className="block text-sm font-medium text-gray-300 mb-1.5">Username or Email</label>
                             <input
-                                name="username"
-                                type="text"
-                                required
-                                value={formData.username}
-                                onChange={handleChange}
-                                className="input-field"
-                                placeholder=""
+                                name="username" type="text" required
+                                value={formData.username} onChange={handleChange}
+                                className="minimal-input"
+                                placeholder="developer@example.com"
                             />
                         </div>
                         <div>
-                            <div className="flex items-center justify-between mb-2">
-                                <label className="block text-sm font-bold text-slate-200 tracking-wide">
-                                    Password
-                                </label>
-                                <a href="#" className="text-sm font-semibold text-primary hover:text-primary-hover transition-colors">
-                                    Forgot password?
-                                </a>
+                            <div className="flex items-center justify-between mb-1.5">
+                                <label className="block text-sm font-medium text-gray-300">Password</label>
+                                <a href="#" className="text-xs text-gray-400 hover:text-white transition-colors">Forgot password?</a>
                             </div>
                             <input
-                                name="password"
-                                type="password"
-                                required
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="input-field"
-                                placeholder=""
+                                name="password" type="password" required
+                                value={formData.password} onChange={handleChange}
+                                className="minimal-input"
+                                placeholder="••••••••"
                             />
                         </div>
                         <div className="pt-2">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full btn-primary py-3.5 text-[15px] flex items-center justify-center gap-2 group"
-                            >
-                                {loading ? (
-                                    <span className="animate-pulse">Authenticating...</span>
-                                ) : (
-                                    <>
-                                        <span>Sign in</span>
-                                        <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                                    </>
-                                )}
+                            <button type="submit" disabled={loading} className="btn-primary flex items-center justify-center">
+                                {loading ? 'Signing in...' : 'Sign in'}
                             </button>
                         </div>
                     </form>
                 </div>
-                <p className="mt-8 text-center text-xs text-slate-400 font-medium px-10">
-                    By continuing, you agree to DevConnect's <a href="#" className="underline hover:text-slate-400">Terms of Service</a> and <a href="#" className="underline hover:text-slate-400">Privacy Policy</a>.
-                </p>
             </div>
         </div>
     );

@@ -22,11 +22,9 @@ const Chat = () => {
     const [localUsers, setLocalUsers] = useState([]);
     const [isLoadingUsers, setIsLoadingUsers] = useState(true);
     const messagesEndRef = useRef(null);
-    // Fetch all users to chat with
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                // For simplicity, we'll fetch all users except the current user
                 const res = await api.get('/users/all'); 
                 setLocalUsers(res.data.data.filter((u) => u._id !== user._id));
             } catch (error) {
@@ -71,11 +69,9 @@ const Chat = () => {
     };
     return (
         <div className="max-w-7xl mx-auto pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative">
-            {/* Ambient Background Glows */}
             <div className="fixed top-20 left-10 w-96 h-96 bg-primary/20 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob pointer-events-none -z-10"></div>
             <div className="fixed top-40 right-10 w-96 h-96 bg-accent/10 rounded-full mix-blend-multiply filter blur-[100px] opacity-70 animate-blob animation-delay-2000 pointer-events-none -z-10"></div>
             <div className="glass-panel rounded-3xl overflow-hidden h-[80vh] flex shadow-2xl border border-white/40">
-                {/* Sidebar - User List */}
                 <div className="w-[320px] border-r border-slate-200/50 flex flex-col bg-white/40 backdrop-blur-md">
                     <div className="p-6 border-b border-slate-200/50 flex justify-between items-center">
                         <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">Messages</h2>
@@ -125,7 +121,6 @@ const Chat = () => {
                         )}
                     </div>
                 </div>
-                {/* Main Chat Area */}
                 <div className="flex-1 flex flex-col bg-white/20 backdrop-blur-sm relative">
                     {!selectedUser ? (
                         <div className="flex-1 flex flex-col items-center justify-center text-slate-500">
@@ -137,7 +132,6 @@ const Chat = () => {
                         </div>
                     ) : (
                         <>
-                            {/* Chat Header */}
                             <div className="px-6 py-4 border-b border-slate-200/50 bg-white/40 flex items-center justify-between backdrop-blur-md">
                                 <div className="flex items-center gap-4">
                                     <img src={selectedUser.avatar || "https://i.pravatar.cc/150"} alt={selectedUser.username} className="w-11 h-11 rounded-full object-cover shadow-sm bg-white border border-slate-100" />
@@ -156,7 +150,6 @@ const Chat = () => {
                                     <i className="fa-solid fa-circle-info text-lg"></i>
                                 </button>
                             </div>
-                            {/* Messages Container */}
                             <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar bg-slate-50/30">
                                 {messages.map((msg, idx) => {
                                     const isMe = msg.sender === user._id;
@@ -176,7 +169,6 @@ const Chat = () => {
                                 })}
                                 <div ref={messagesEndRef} />
                             </div>
-                            {}
                             <div className="p-4 bg-white/60 backdrop-blur-md border-t border-slate-200/50">
                                 <form onSubmit={handleSendMessage} className="flex gap-3 items-center">
                                     <button type="button" className="w-10 h-10 rounded-full text-slate-400 hover:text-primary hover:bg-white flex items-center justify-center transition-colors shrink-0 shadow-sm">

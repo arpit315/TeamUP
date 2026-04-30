@@ -12,7 +12,6 @@ const ImageGallery = ({ images, onClose, title }) => {
                 <FiX className="w-8 h-8" />
             </button>
             <div className="relative w-full max-w-5xl aspect-video flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
-                {}
                 {images.length > 1 && (
                     <>
                         <button
@@ -35,20 +34,17 @@ const ImageGallery = ({ images, onClose, title }) => {
                         </button>
                     </>
                 )}
-                {}
                 <div className="w-full h-full flex items-center justify-center relative overflow-hidden rounded-2xl shadow-2xl">
                     <img
                         src={images[activeIndex]}
                         alt={title || "Gallery"}
                         className="max-w-full max-h-full object-contain animate-scale-in"
                     />
-                    {}
                     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/40 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm font-bold border border-white/10">
                         {activeIndex + 1} / {images.length}
                     </div>
                 </div>
             </div>
-            {}
             {images.length > 1 && (
                 <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3 p-2 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 max-w-[90vw] overflow-x-auto no-scrollbar" onClick={(e) => e.stopPropagation()}>
                     {images.map((img, idx) => (

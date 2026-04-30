@@ -18,7 +18,6 @@ const Navbar = () => {
         <nav className="fixed top-0 left-0 right-0 glass-panel z-50">
             <div className="w-full px-6 md:px-12">
                 <div className="flex justify-between items-center h-[72px]">
-                    {}
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center gap-2.5 group">
                             <div className="relative flex items-center justify-center w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-[14px] shadow-lg group-hover:shadow-primary/40 transition-all duration-300">
@@ -30,7 +29,6 @@ const Navbar = () => {
                             </span>
                         </Link>
                     </div>
-                    {}
                     <div className="hidden md:flex items-center flex-1 max-w-md mx-8 relative group">
                         <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">
                             <FiSearch className="w-4 h-4" />
@@ -48,7 +46,6 @@ const Navbar = () => {
                             className="w-full bg-slate-100/50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 border border-transparent dark:border-white/10 focus:bg-white dark:focus:bg-white/10 focus:border-primary/30 dark:focus:border-primary/50 rounded-full py-2.5 pl-10 pr-4 text-sm text-slate-700 dark:text-white outline-none transition-all duration-300 placeholder-slate-400 shadow-inner group-focus-within:shadow-md"
                         />
                     </div>
-                    {}
                     <div className="flex items-center gap-6">
                         {user ? (
                             <>
